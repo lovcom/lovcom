@@ -36,10 +36,12 @@ struct ContentView: View {
                 .transition(.pivot)
             
             if isShowingRed {
-                Rectangle()
-                    .fill(.red)
-                    .frame(width: 200, height: 200)
-                    .transition(.pivot)
+                withAnimation {
+                    Rectangle()
+                        .fill(.red)
+                        .frame(width: 200, height: 200)
+                        .transition(.pivot)
+                }
             }
         }
         .onTapGesture {
