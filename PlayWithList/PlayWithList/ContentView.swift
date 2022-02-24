@@ -8,30 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var numbers = [23, 43, 44, 65, 99, 334, 543, 223, 89, 0, 55, 44]
+    
     var body: some View {
         List {
-            Text("Hello World 01")
-                .foregroundColor(.blue)
-            Text("Hello World 02")
-                .foregroundColor(.red)
-            Text("Hello World 03")
-                .foregroundColor(.green)
-            Text("Hello World 04")
-                .foregroundColor(.yellow)
-            Text("Hello World 05")
-                .foregroundColor(.orange)
-            Text("Hello World 06")
-                .foregroundColor(.purple)
-            Text("Hello World 07")
-                .foregroundColor(.white)
-                .background(.black)
-            Text("Hello World 08")
-                .foregroundColor(.brown)
-            Text("Hello World 09")
-                .foregroundColor(.cyan)
-            Text("Hello World 10")
-                .foregroundColor(.teal)
-            // Text("Hello World 11") 11th view not possible
+            ForEach(numbers, id: \.self) {
+                Text("Hello World \($0)")
+                    .foregroundColor(.blue)
+            }
         }
     }
 }
