@@ -34,6 +34,25 @@ class Expenses: ObservableObject {
     }
 }
 
+struct StylizeAmount: ViewModifier {
+    let amount: Double
+    
+    func body(content: Content) -> some View {
+        var color: Color = .blue
+        
+        if amount <= 10 {
+            color = Color.red
+        } else if amount > 10 && amount <= 100 {
+            color = Color.green
+        } else {
+            color = Color.orange
+        }
+        
+        return content
+            .foregroundColor(color)
+    }
+}
+
 struct ContentView: View {
     @StateObject var expenses = Expenses() // Instantiation happens here
     @State private var showingAddExpense = false
@@ -50,6 +69,7 @@ struct ContentView: View {
                         }
                         Spacer()
                         Text(item.amount, format: .currency(code: "USD"))
+                            .modifier(StylizeAmount(amount: item.amount))
                     }
                 }
                 .onDelete(perform: removeItems)
