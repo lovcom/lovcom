@@ -62,7 +62,7 @@ struct ContentView: View {
                     Image(systemName: "plus")
                 }
             }
-            .sheet(isPresented: $showingAddExpense) {
+            .sheet(isPresented: $showingAddExpense) { // display the 2nd View: AddView
                 AddView(expenses: expenses)
             }
         }
