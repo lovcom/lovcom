@@ -9,6 +9,10 @@ import Foundation
 
 extension Bundle {
     
+    // ********************************************************************
+    // * This func extends Bundle, and can be used to convert a JSON file *
+    // * to any agreeying struct object.                                  *
+    // ********************************************************************
     func decode<T: Codable>(_ file: String) -> T {
         
         // *************************

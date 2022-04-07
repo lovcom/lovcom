@@ -8,9 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
-    let astronauts: [String: Astronaut] = Bundle.main.decode("astronauts.json")
-    let missions: [Mission] = Bundle.main.decode("missions.json")
     
+    // ***************************************
+    // * Convert JSON data to struct objects *
+    // ***************************************
+    let astronauts: [String: Astronaut] = Bundle.main.decode("astronauts.json") // Dictionary
+    let missions: [Mission] = Bundle.main.decode("missions.json") // Array of Missions
+    
+    // *************************************************************
+    // * Define the Columns to be used with a LazyVGrid View below *
+    // * They are defined as adaptive so that the View can be used *
+    // * on many different Apple devices, and look good.           *
+    // *************************************************************
     let columns = [
         GridItem(.adaptive(minimum: 150))
     ]
@@ -21,7 +30,7 @@ struct ContentView: View {
                 LazyVGrid(columns: columns) {
                     ForEach(missions) { mission in
                         NavigationLink {
-                            MissionView(mission: mission, astronauts: astronauts)
+                            MissionView(mission: mission, astronauts: astronauts) // Evoked Full-Screen View
                         } label: {
                             VStack {
                                 Image(mission.image)
@@ -42,12 +51,12 @@ struct ContentView: View {
                                 }
                                 .padding(.vertical)
                                 .frame(maxWidth: .infinity)
-                                .background(.lightBackground)
+                                .background(.lightBackground) // Custom defined: Color-Theme.swift
                             }
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(.lightBackground)
+                                .stroke(.lightBackground) // Custom defined: Color-Theme.swift
                             )
                         }
                     }
@@ -55,7 +64,7 @@ struct ContentView: View {
                 .padding([.horizontal, .bottom])
             }
             .navigationTitle("Moonshot")
-            .background(.darkBackground)
+            .background(.darkBackground) // Custom defined: Color-Theme.swift
             .preferredColorScheme(.dark)
         }
     }
