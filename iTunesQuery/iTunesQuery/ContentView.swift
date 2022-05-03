@@ -26,6 +26,8 @@ struct ContentView: View {
                 Text(item.trackName)
                     .font(.headline)
                 Text(item.collectionName)
+                    .font(.caption)
+                //Text(item.trackId)
             }
         }
         .task {
