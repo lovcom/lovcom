@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+// **************************************************************************
+// * Use Structs to Define a JSON array results containing Results elements *
+// **************************************************************************
 struct Response: Codable {
     var results: [Results]
 }
@@ -27,7 +30,6 @@ struct ContentView: View {
                     .font(.headline)
                 Text(item.collectionName)
                     .font(.caption)
-                //Text(item.trackId)
             }
         }
         .task {
