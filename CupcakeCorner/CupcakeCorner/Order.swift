@@ -35,4 +35,25 @@ class Order: ObservableObject {
         }
         return true
     }
+    
+    var cost: Double { // Double is not the best type for currencies, but for now it will do.
+        // $2/cupcake
+        var cost = Double(quantity) * 2
+        
+        // Complicated cupcakes cost more
+        cost += (Double(type) / 2)
+        
+        // $1/cupcake for extra frosting
+        if extraFrosting {
+            cost += Double(quantity)
+        }
+        
+        // $0.50/cupcake for sprinkles
+        if addSprinkles {
+            cost += Double(quantity) / 2
+        }
+        
+        return cost
+    }
+    
 }
