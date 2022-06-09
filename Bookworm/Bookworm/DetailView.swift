@@ -39,7 +39,7 @@ struct DetailView: View {
             Text(book.review ?? "No review")
                 .padding()
             
-            RatingView(rating: .constant(Int(book.rating)))
+            RatingView(rating: .constant(Int(book.rating))) // .constant used becaue no binding required
                 .font(.largeTitle)
             
         }
@@ -55,7 +55,7 @@ struct DetailView: View {
             Button {
                 showingDeleteAlert = true
             } label: {
-                Label("Delete this Book", systemImage: "trash")
+                Label("Delete this Book", systemImage: "trash") // trash is from SF Symbols
             }
         }
     }

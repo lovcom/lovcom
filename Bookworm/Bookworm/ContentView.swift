@@ -50,7 +50,7 @@ struct ContentView: View {
                     Button {
                         showingAddScreen.toggle()
                     } label: {
-                        Label("Add Book", systemImage: "plus")
+                        Label("Add book", systemImage: "plus")
                     }
                 }
             }

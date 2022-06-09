@@ -13,7 +13,7 @@ struct AddBookView: View {
     
     @State private var title = ""
     @State private var author = ""
-    @State private var rating = 3
+    @State private var rating = 3 // default value
     @State private var genre = ""
     @State private var review = ""
     
@@ -53,7 +53,10 @@ struct AddBookView: View {
                         newBook.genre = genre
                         newBook.review = review
                         
-                        try? moc.save()
+                        try? moc.save() // Write RAM data to Persistent Storage
+                        dismiss()
+                    }
+                    Button("Cancel") {
                         dismiss()
                     }
                 }

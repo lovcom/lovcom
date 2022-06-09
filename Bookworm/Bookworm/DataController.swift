@@ -17,14 +17,16 @@ class DataController: ObservableObject {
     // *******************************************************************
     let container = NSPersistentContainer(name: "Bookworm")
     
-    // ************************************************
-    // * Load the Database from the harddrive to RAM. *
-    // * Most apps only use 1 persistent store.       *
-    // ************************************************
+    // ***************************************************
+    // * Load the Database from the harddrive to RAM.    *
+    // * Most apps only use 1 persistent store.          *
+    // * This step loads the actual data from persistent *
+    // * storage to RAM.                                 *
+    // ***************************************************
     init() {
         container.loadPersistentStores {description, error in
             if let error = error {
-                print("CoreData failed to load: \(error.localizedDescription)")
+                print("CoreData failed to load Bookworm data: \(error.localizedDescription)")
             }
         }
     }
