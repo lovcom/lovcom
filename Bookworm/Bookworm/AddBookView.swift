@@ -16,6 +16,16 @@ struct AddBookView: View {
     @State private var rating = 3 // default value
     @State private var genre = ""
     @State private var review = ""
+    @State private var createdTS = Date.now
+    
+    private var isValidBookReview: Bool {
+        if title.isEmpty { return false }
+        if author.isEmpty { return false }
+        if rating <= 0 || rating > 5 { return false }
+        if genres.filter({$0 == genre}).isEmpty { return false }
+        if review.isEmpty { return false }
+        return true
+    }
     
     let genres = ["Fantasy", "Horror", "Kids", "Mystery", "Poetry", "Romance", "Thriller"]
     
@@ -52,10 +62,12 @@ struct AddBookView: View {
                         newBook.rating = Int16(rating)
                         newBook.genre = genre
                         newBook.review = review
+                        newBook.createdTS = Date.now
                         
                         try? moc.save() // Write RAM data to Persistent Storage
                         dismiss()
                     }
+                    .disabled(!isValidBookReview)
                     Button("Cancel") {
                         dismiss()
                     }

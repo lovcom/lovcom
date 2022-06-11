@@ -14,6 +14,11 @@ struct DetailView: View {
     @Environment(\.dismiss) var dismiss
     @State private var showingDeleteAlert = false
     
+    private var formattedTS: String {
+        let formatter = DateFormatter()
+        formatter.setLocalizedDateFormatFromTemplate("EEEEdMMMMyyyyHHmm")
+        return formatter.string(from: book.createdTS ?? Date.distantPast)
+    }
     
     var body: some View {
         ScrollView {
@@ -31,6 +36,9 @@ struct DetailView: View {
                     .clipShape(Capsule())
                     .offset(x: -5, y: -5)
             }
+            
+            Text(formattedTS)
+                .font(.caption)
             
             Text(book.author ?? "Unknown author")
                 .font(.title)
