@@ -67,20 +67,16 @@ struct ContentView: View {
         
         List(users, id: \.id) { row in
             VStack(alignment: .leading) {
-                Text(row.unwrappedId)
+                Text("Name: \(row.unwrappedName)")
                     .font(.headline)
-                Text(row.unwrappedName)
-                    .font(.caption)
-                Text(String(row.age))
-                    .font(.caption)
-                Text(row.unwrappedCompany)
-                    .font(.caption)
-                Text("Friends count: \(row.friendsArray.count)")
-                    .font(.caption)
                     .foregroundColor(.red)
+                Text("Age: \(String(row.age))")
+                    .font(.caption)
+                Text("Company: \(row.unwrappedCompany)")
+                    .font(.caption)
                 
                 ForEach(row.friendsArray) { friend in
-                    Text(friend.unwrappedName)
+                    Text("Friend Name: \(friend.unwrappedName)")
                         .font(.caption)
                         .foregroundColor(.blue)
                 }
@@ -88,11 +84,18 @@ struct ContentView: View {
             }
             
         }
+        
+        // **************************************************************
+        // * Load Data into persistent tables User and Friend from JSON *
+        // **************************************************************
         .task(priority: .high) {
             await loadData()
         }
     }
     
+    // *************************************************
+    // * Load Data from JSON into Tables User & Friend *
+    // *************************************************
     func loadData() async {
         
         // ****************************
@@ -103,9 +106,9 @@ struct ContentView: View {
             return
         }
         
-        // *****************************************
-        // * Call the URL, receiving back Response *
-        // *****************************************
+        // *************************************************
+        // * Call the Web service, receiving back Response *
+        // *************************************************
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             
@@ -115,29 +118,56 @@ struct ContentView: View {
             if let decodedResponse = try? JSONDecoder().decode([Results].self, from: data) {
                 results = decodedResponse
                 
-                // ****************************************************
-                // * Insert decoded data into Tables User and Friends *
-                // ****************************************************
+                // ********************************
+                // * Clear User and Friend Tables *
+                // ********************************
+                for user in users {
+                    moc.delete(user)
+                }
+                
+                // ******************************************
+                // * If Deletions were made, commit changes *
+                // ******************************************
+                if moc.hasChanges {
+                    
+                    do {
+                        try moc.save() // Write RAM data to Persistent Storage
+                    } catch {
+                        print("moc.save() for deletion failed")
+                    }
+                }
+                
+                // ***************************************************
+                // * Insert decoded data into Tables User and Friend *
+                // ***************************************************
                 for user in results {
+                    
+                    // ***********************
+                    // * Create New User Row *
+                    // ***********************
                     let newUser = User(context: moc)
                     
                     newUser.id = user.id
                     newUser.name = user.name
                     newUser.age = Int16(user.age)
                     newUser.company = user.company
-                    print("User Name: \(newUser.name ?? "no user name")")
                     
+                    // *********************************************
+                    // * Create Friend Rows for User (many to one) *
+                    // *********************************************
                     for friend in user.friends {
                         let newFriend = Friend(context: moc)
                         
                         newFriend.id = friend.id
                         newFriend.name = friend.name
                         newFriend.user = newUser
-                        print("Friend Name: \(newFriend.name ?? "no friend name")")
                     }
                     
                 }
                 
+                // ***************************************************************
+                // * If Inserts were made to User and Friend tables, commit them *
+                // ***************************************************************
                 if moc.hasChanges {
                     print("DB Has Changes")
                     
@@ -149,11 +179,11 @@ struct ContentView: View {
                 }
                 
             } else {
-                print("Decoding of JSON went wrong")
+                print("Decoding of JSON failed")
             }
             
         } catch {
-            print("Invalid data")
+            print("Invalid JSON data")
         }
     }
     

@@ -52,6 +52,8 @@
 		2A011261286A858C00A42DCE = {
 			isa = PBXGroup;
 			children = (
+				2A011287286A912700A42DCE /* Friend+CoreDataProperties.swift */,
+				2A011288286A912700A42DCE /* User+CoreDataProperties.swift */,
 				2A0112912877AA4800A42DCE /* Friend+CoreDataProperties.swift */,
 				2A0112922877AA4800A42DCE /* User+CoreDataProperties.swift */,
 				2A01126C286A858C00A42DCE /* UserFriends */,
@@ -71,9 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				2A01127F286A87A300A42DCE /* Friend+CoreDataClass.swift */,
-				2A011287286A912700A42DCE /* Friend+CoreDataProperties.swift */,
 				2A011281286A87A300A42DCE /* User+CoreDataClass.swift */,
-				2A011288286A912700A42DCE /* User+CoreDataProperties.swift */,
 				2A01126D286A858C00A42DCE /* UserFriendsApp.swift */,
 				2A01128B2871E6F000A42DCE /* DataController.swift */,
 				2A01126F286A858C00A42DCE /* ContentView.swift */,

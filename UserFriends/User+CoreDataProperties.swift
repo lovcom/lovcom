@@ -9,7 +9,9 @@
 import Foundation
 import CoreData
 
-
+// ***************************************************
+// * Auto-Created by CoreData from Data Model screen *
+// ***************************************************
 extension User {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<User> {
