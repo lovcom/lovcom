@@ -65,7 +65,7 @@ struct ContentView: View {
     
     var body: some View {
         
-        List(users, id: \.id) { row in
+        List(users) { row in // implied: id: \.id
             VStack(alignment: .leading) {
                 Text("Name: \(row.unwrappedName)")
                     .font(.headline)
@@ -147,7 +147,7 @@ struct ContentView: View {
                     // ***********************
                     let newUser = User(context: moc)
                     
-                    newUser.id = user.id
+                    newUser.id = UUID()
                     newUser.name = user.name
                     newUser.age = Int16(user.age)
                     newUser.company = user.company
@@ -158,7 +158,7 @@ struct ContentView: View {
                     for friend in user.friends {
                         let newFriend = Friend(context: moc)
                         
-                        newFriend.id = friend.id
+                        newFriend.id = UUID()
                         newFriend.name = friend.name
                         newFriend.user = newUser
                     }

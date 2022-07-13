@@ -21,7 +21,7 @@ extension User {
     @NSManaged public var age: Int16
     @NSManaged public var company: String?
     @NSManaged public var name: String?
-    @NSManaged public var id: String?
+    @NSManaged public var id: UUID?
     @NSManaged public var friends: NSSet?
 
     public var unwrappedCompany: String {
@@ -32,8 +32,8 @@ extension User {
         name ?? "Unknown Name"
     }
     
-    public var unwrappedId: String {
-        id ?? "Unknown id"
+    public var unwrappedId: UUID {
+        id ?? UUID()
     }
     
     public var friendsArray: [Friend] {

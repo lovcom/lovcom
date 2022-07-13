@@ -16,12 +16,12 @@ extension Friend {
         return NSFetchRequest<Friend>(entityName: "Friend")
     }
 
-    @NSManaged public var id: String?
+    @NSManaged public var id: UUID?
     @NSManaged public var name: String?
     @NSManaged public var user: User?
     
-    public var unwrappedId: String {
-        id ?? "Unknown id"
+    public var unwrappedId: UUID {
+        id ?? UUID()
     }
     
     public var unwrappedName: String {
