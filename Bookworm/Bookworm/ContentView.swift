@@ -50,6 +50,7 @@ struct ContentView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showingAddScreen.toggle()
+                        print("asdfaf")
                     } label: {
                         Label("Add book", systemImage: "plus")
                     }

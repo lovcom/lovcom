@@ -64,39 +64,61 @@ struct ContentView: View {
         SortDescriptor(\.name)]) var users: FetchedResults<User>
     
     var body: some View {
-        
-        List(users) { row in // implied: id: \.id
-            VStack(alignment: .leading) {
-                Text("Name: \(row.unwrappedName)")
-                    .font(.headline)
-                    .foregroundColor(.red)
-                Text("Age: \(String(row.age))")
-                    .font(.caption)
-                Text("Company: \(row.unwrappedCompany)")
-                    .font(.caption)
-                
-                ForEach(row.friendsArray) { friend in
-                    Text("Friend Name: \(friend.unwrappedName)")
+        NavigationView {
+            List(users) { row in // implied: id: \.id
+                VStack(alignment: .leading) {
+                    Text("Name: \(row.unwrappedName)")
+                        .font(.headline)
+                        .foregroundColor(.red)
+                    Text("Age: \(String(row.age))")
                         .font(.caption)
-                        .foregroundColor(.blue)
+                    Text("Company: \(row.unwrappedCompany)")
+                        .font(.caption)
+                    
+                    ForEach(row.friendsArray) { friend in
+                        Text("Friend Name: \(friend.unwrappedName)")
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                    }
                 }
                 
             }
-            
+            .navigationTitle("Users and Friends") // inside at end of NavigationView
+            .toolbar {
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        Task() {
+                            await loadData()
+                        }
+                    } label: {
+                        Label("asdfsdaf", systemImage: "plus")
+                    }
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        Task() {
+                            clearAllUsers(users: users)
+                        }
+                    } label: {
+                        Label("asdfsdaf", systemImage: "trash")
+                    }
+                }
+                
+            }
         }
         
-        // **************************************************************
-        // * Load Data into persistent tables User and Friend from JSON *
-        // **************************************************************
-        .task(priority: .high) {
-            await loadData()
-        }
     }
     
     // *************************************************
     // * Load Data from JSON into Tables User & Friend *
     // *************************************************
     func loadData() async {
+        let normalRun = true
+        print("**************************")
+        print("* func loadData() Evoked *")
+        print("**************************")
         
         // ****************************
         // * Confirm the URL is Valid *
@@ -121,61 +143,13 @@ struct ContentView: View {
                 // ********************************
                 // * Clear User and Friend Tables *
                 // ********************************
-                for user in users {
-                    moc.delete(user)
-                }
-                
-                // ******************************************
-                // * If Deletions were made, commit changes *
-                // ******************************************
-                if moc.hasChanges {
-                    
-                    do {
-                        try moc.save() // Write RAM data to Persistent Storage
-                    } catch {
-                        print("moc.save() for deletion failed")
-                    }
-                }
+                clearAllUsers(users: users)
                 
                 // ***************************************************
                 // * Insert decoded data into Tables User and Friend *
                 // ***************************************************
-                for user in results {
-                    
-                    // ***********************
-                    // * Create New User Row *
-                    // ***********************
-                    let newUser = User(context: moc)
-                    
-                    newUser.id = UUID()
-                    newUser.name = user.name
-                    newUser.age = Int16(user.age)
-                    newUser.company = user.company
-                    
-                    // *********************************************
-                    // * Create Friend Rows for User (many to one) *
-                    // *********************************************
-                    for friend in user.friends {
-                        let newFriend = Friend(context: moc)
-                        
-                        newFriend.id = UUID()
-                        newFriend.name = friend.name
-                        newFriend.user = newUser
-                    }
-                    
-                }
-                
-                // ***************************************************************
-                // * If Inserts were made to User and Friend tables, commit them *
-                // ***************************************************************
-                if moc.hasChanges {
-                    print("DB Has Changes")
-                    
-                    do {
-                        try moc.save() // Write RAM data to Persistent Storage
-                    } catch {
-                        print("moc.save() failed")
-                    }
+                if normalRun {
+                    writeJSON_ToPersistentStores(results: results)
                 }
                 
             } else {
@@ -187,6 +161,101 @@ struct ContentView: View {
         }
     }
     
+    // *******************
+    // * Clear all Users *
+    // *******************
+    func clearAllUsers(users: FetchedResults<User>) {
+        print("*******************************")
+        print("* func clearAllUsers() Evoked *")
+        print("* userCount is \(users.count)            *")
+        print("*******************************")
+        
+        var userCount: Int = 0
+        
+        for user in users {
+            moc.delete(user)
+            userCount += 1
+        }
+        
+        // ******************************************
+        // * If Deletions were made, commit changes *
+        // ******************************************
+        if moc.hasChanges {
+            
+            do {
+                try moc.save() // Write RAM data to Persistent Storage
+                print("Number of Users Deleted: \(userCount)")
+            } catch {
+                print("moc.save() for deletion failed")
+            }
+        }
+        
+    }
+    
+    // ********************************************************
+    // * Write JSON Data to Persistent tables User and Friend *
+    // ********************************************************
+    func writeJSON_ToPersistentStores(results: [Results]) {
+        print("********************************")
+        print("* Add JSON Data to User Stores *")
+        print("********************************")
+        var arrayUsers = [User]()
+        var nextUser: Int = -1
+        var numberOfUsersWritten = 0
+        var numberofUsersWriteError = 0
+        
+        for user in results {
+            // *******************************************
+            // * Create New User inside Array arrayUsers *
+            // *******************************************
+            nextUser += 1
+            arrayUsers.insert(User(context: moc), at: nextUser)
+            
+            arrayUsers[nextUser].id = UUID()
+            arrayUsers[nextUser].name = user.name
+            arrayUsers[nextUser].age = Int16(user.age)
+            arrayUsers[nextUser].company = user.company
+            arrayUsers[nextUser].friends = []
+            
+            // *********************************************
+            // * Create Friend Rows for User (many to one) *
+            // *********************************************
+            var arrayUserFriends = [Friend]()
+            var nextFriend = -1
+            
+            for friend in user.friends {
+                nextFriend += 1
+                arrayUserFriends.insert(Friend(context: moc), at: nextFriend)
+                
+                arrayUserFriends[nextFriend].id = UUID()
+                arrayUserFriends[nextFriend].name = friend.name
+                arrayUserFriends[nextFriend].user = arrayUsers[nextUser]
+                arrayUsers[nextUser].friends?.adding(arrayUserFriends[nextFriend])
+            }
+            
+            // **************************************
+            // * Save New User to Persistant Stores *
+            // **************************************
+            if moc.hasChanges {
+                
+                do {
+                    try moc.save() // Write RAM data to Persistent Storage
+                    numberOfUsersWritten += 1
+                } catch {
+                    print("moc.save() failed")
+                    numberofUsersWriteError += 1
+                }
+                
+            }
+            
+        }
+        
+        print("*************************")
+        print("* loadData Process Done *")
+        print("* Success Writes: \(numberOfUsersWritten)   *")
+        print("* Error Writes: \(numberofUsersWriteError)       *")
+        print("*************************")
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
