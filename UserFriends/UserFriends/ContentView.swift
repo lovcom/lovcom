@@ -65,6 +65,7 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
+            
             List(users) { row in // implied: id: \.id
                 VStack(alignment: .leading) {
                     Text("Name: \(row.unwrappedName)")
@@ -79,43 +80,51 @@ struct ContentView: View {
                         Text("Friend Name: \(friend.unwrappedName)")
                             .font(.caption)
                             .foregroundColor(.blue)
-                    }
-                }
-                
-            }
+                    } // ForEach()
+                } // VStack()
+            } // List()
+            
+            // ********************************************
+            // * Inside and at bottom of NavigationView() *
+            // ********************************************
             .navigationTitle("Users and Friends") // inside at end of NavigationView
+            
             .toolbar {
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        Task() {
-                            await loadData()
+                        if users.count == 0 {
+                            Task() {
+                                await loadData()
+                            }
                         }
                     } label: {
-                        Label("asdfsdaf", systemImage: "plus")
+                        Label("SaveJSON_Data", systemImage: "plus")
                     }
-                }
+                } // ToolbarItem()
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        Task() {
-                            clearAllUsers(users: users)
+                        if users.count != 0 {
+                            Task() {
+                               await clearAllUsers(users: users)
+                            }
                         }
                     } label: {
-                        Label("asdfsdaf", systemImage: "trash")
+                        Label("Clear Persistant Storage", systemImage: "trash")
                     }
-                }
+                } // ToolbarItem()
                 
-            }
-        }
+            } // .toolbar
+        } // NavigationView()
         
-    }
+    } // var body
     
     // *************************************************
     // * Load Data from JSON into Tables User & Friend *
     // *************************************************
     func loadData() async {
-        let normalRun = true
+        
         print("**************************")
         print("* func loadData() Evoked *")
         print("**************************")
@@ -143,14 +152,13 @@ struct ContentView: View {
                 // ********************************
                 // * Clear User and Friend Tables *
                 // ********************************
-                clearAllUsers(users: users)
+                await clearAllUsers(users: users)
                 
                 // ***************************************************
                 // * Insert decoded data into Tables User and Friend *
                 // ***************************************************
-                if normalRun {
-                    writeJSON_ToPersistentStores(results: results)
-                }
+                await writeJSON_ToPersistentStores(results: results)
+                
                 
             } else {
                 print("Decoding of JSON failed")
@@ -159,12 +167,12 @@ struct ContentView: View {
         } catch {
             print("Invalid JSON data")
         }
-    }
+    } // loadData()
     
     // *******************
     // * Clear all Users *
     // *******************
-    func clearAllUsers(users: FetchedResults<User>) {
+    func clearAllUsers(users: FetchedResults<User>) async {
         print("*******************************")
         print("* func clearAllUsers() Evoked *")
         print("* userCount is \(users.count)            *")
@@ -190,12 +198,12 @@ struct ContentView: View {
             }
         }
         
-    }
+    } // clearAllUsers()
     
     // ********************************************************
     // * Write JSON Data to Persistent tables User and Friend *
     // ********************************************************
-    func writeJSON_ToPersistentStores(results: [Results]) {
+    func writeJSON_ToPersistentStores(results: [Results]) async {
         print("********************************")
         print("* Add JSON Data to User Stores *")
         print("********************************")
