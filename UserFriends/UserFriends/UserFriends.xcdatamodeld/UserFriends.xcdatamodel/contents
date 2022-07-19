@@ -15,7 +15,7 @@
         <attribute name="company" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="friends" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Friend" inverseName="user" inverseEntity="Friend"/>
+        <relationship name="friends" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Friend" inverseName="user" inverseEntity="Friend"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="id"/>

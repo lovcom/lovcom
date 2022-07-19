@@ -65,23 +65,25 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            
-            List(users) { row in // implied: id: \.id
-                VStack(alignment: .leading) {
-                    Text("Name: \(row.unwrappedName)")
-                        .font(.headline)
-                        .foregroundColor(.red)
-                    Text("Age: \(String(row.age))")
-                        .font(.caption)
-                    Text("Company: \(row.unwrappedCompany)")
-                        .font(.caption)
-                    
-                    ForEach(row.friendsArray) { friend in
-                        Text("Friend Name: \(friend.unwrappedName)")
-                            .font(.caption)
-                            .foregroundColor(.blue)
-                    } // ForEach()
-                } // VStack()
+            List {
+                ForEach(users) { row in
+                    NavigationLink {
+                        FriendsView(userName: row.unwrappedName, friendsArray: row.friendsArray)
+                    } label: {
+                        VStack(alignment: .leading) {
+                            Text("Name: \(row.unwrappedName)")
+                                .font(.headline)
+                                .foregroundColor(.red)
+                            Text("Age: \(String(row.age))")
+                                .font(.caption)
+                            Text("Company: \(row.unwrappedCompany)")
+                                .font(.caption)
+                            Text("Number of Friends: \(row.friendsArray.count)")
+                                .font(.caption)
+                        } // VStack()
+                    } // NavigationLink() label
+                } // ForEach()
+                //.onDelete(perform: deleteUser)
             } // List()
             
             // ********************************************
@@ -107,7 +109,7 @@ struct ContentView: View {
                     Button {
                         if users.count != 0 {
                             Task() {
-                               await clearAllUsers(users: users)
+                                await clearAllUsers(users: users)
                             }
                         }
                     } label: {

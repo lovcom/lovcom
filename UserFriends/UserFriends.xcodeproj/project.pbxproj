@@ -19,6 +19,7 @@
 		2A01128C2871E6F000A42DCE /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01128B2871E6F000A42DCE /* DataController.swift */; };
 		2A0112932877AA4800A42DCE /* Friend+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0112912877AA4800A42DCE /* Friend+CoreDataProperties.swift */; };
 		2A0112942877AA4800A42DCE /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0112922877AA4800A42DCE /* User+CoreDataProperties.swift */; };
+		2AF5CF0228861BDF00E643F4 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF5CF0128861BDF00E643F4 /* FriendsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		2A01128B2871E6F000A42DCE /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		2A0112912877AA4800A42DCE /* Friend+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Friend+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		2A0112922877AA4800A42DCE /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		2AF5CF0128861BDF00E643F4 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 				2A01126D286A858C00A42DCE /* UserFriendsApp.swift */,
 				2A01128B2871E6F000A42DCE /* DataController.swift */,
 				2A01126F286A858C00A42DCE /* ContentView.swift */,
+				2AF5CF0128861BDF00E643F4 /* FriendsView.swift */,
 				2A011271286A858C00A42DCE /* Assets.xcassets */,
 				2A011276286A858C00A42DCE /* UserFriends.entitlements */,
 				2A011273286A858C00A42DCE /* Preview Content */,
@@ -171,6 +174,7 @@
 				2A011289286A912700A42DCE /* Friend+CoreDataProperties.swift in Sources */,
 				2A011270286A858C00A42DCE /* ContentView.swift in Sources */,
 				2A01128C2871E6F000A42DCE /* DataController.swift in Sources */,
+				2AF5CF0228861BDF00E643F4 /* FriendsView.swift in Sources */,
 				2A01126E286A858C00A42DCE /* UserFriendsApp.swift in Sources */,
 				2A01128A286A912700A42DCE /* User+CoreDataProperties.swift in Sources */,
 			);
