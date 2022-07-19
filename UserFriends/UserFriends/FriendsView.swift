@@ -15,15 +15,15 @@ struct FriendsView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading, spacing: 0) {
             List(friendsArray) { friend in // implied: id \.id
-                Text("Friend Name: \(friend.unwrappedName)")
-                    .font(.caption)
+                Text(friend.unwrappedName)
+                    .font(.body)
                     .foregroundColor(.purple)
             } // List()
-            Spacer()
+            Spacer() // this pushes everything to the top
         } // VStack()
-        .navigationBarTitle(Text(userName), displayMode: .inline)
+        .navigationBarTitle(Text("\(userName) Friends"), displayMode: .inline)
     } // var body
     
 }
