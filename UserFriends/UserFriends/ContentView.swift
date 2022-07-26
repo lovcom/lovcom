@@ -83,7 +83,7 @@ struct ContentView: View {
                         } // VStack()
                     } // NavigationLink() label
                 } // ForEach()
-                //.onDelete(perform: deleteUser)
+                .onDelete(perform: deleteUser)
             } // List()
             
             // ********************************************
@@ -119,8 +119,28 @@ struct ContentView: View {
                 
             } // .toolbar
         } // NavigationView()
-        
     } // var body
+    
+    // ***************************************
+    // * Delete users which are swipped left *
+    // ***************************************
+    func deleteUser(at offsets: IndexSet) {
+        
+        for offset in offsets {
+            let user = users[offset]
+            
+            for friend in user.friendsArray {
+                moc.delete(friend)
+            }
+            
+            moc.delete(user)
+        }
+        
+        if moc.hasChanges {
+            try? moc.save()
+        }
+        
+    } // func deleteUsers
     
     // *************************************************
     // * Load Data from JSON into Tables User & Friend *
@@ -183,6 +203,11 @@ struct ContentView: View {
         var userCount: Int = 0
         
         for user in users {
+            
+            for friend in user.friendsArray {
+                moc.delete(friend)
+            }
+            
             moc.delete(user)
             userCount += 1
         }
