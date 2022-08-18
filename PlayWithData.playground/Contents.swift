@@ -2,22 +2,17 @@
 // * This playground demostrants how a file in an app's bundle can  *
 // * be written to an app's persistant Storage Partition playground *
 // ******************************************************************
-import UIKit
+import UIKit // This is needed for FileManager Class and it's methods
 
 // ******************************
 // * File To Be Found in Bundle *
 // ******************************
 let file = "astronauts.json"
 
-// ********************
-// * Get App's Bundle *
-// ********************
-let appBundle = Bundle.main
-
 // *************************
 // * Locate File in Bundle *
 // *************************
-guard let urlOfFileInBundle = appBundle.url(forResource: file, withExtension: nil) else {
+guard let urlOfFileInBundle = Bundle.main.url(forResource: file, withExtension: nil) else {
     fatalError("Could not locate file \(file) in app's bundle.")
 }
 
