@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import UIKit // This brings in FileManager Class functionality
 
 extension FileManager {
     
     // *****************************************************
     // * Write File from Bundle to App's Storage Partition *
     // *****************************************************
-    func writeFileFromBundleToFileManager(_ file: String) -> Bool {
+    static func writeFileFromBundleToFileManager(_ file: String) -> URL {
         
         // ********************
         // * Get App's Bundle *
@@ -26,36 +27,62 @@ extension FileManager {
             fatalError("Failed to find file \(file) in bundle.")
         }
         
-        // *****************************
-        // * Load the File from Bundle *
-        // *****************************
-        guard let data = try? Data(contentsOf: urlOfFileInBundle) else {
-            fatalError("Failed to load file \(file) from bundle.")
+        // **************************************************
+        // * Convert contents of file from Bundle to String *
+        // **************************************************
+        guard let fileInBundleData = try? String(contentsOf: urlOfFileInBundle) else {
+            fatalError("Could not open bundle file \(file) via its url for conversion to String.")
         }
         
-        // ***************************************
-        // * Get App's Partition Directory Entry *
-        // ***************************************
-        let appPartitionStorageEntryURL = getAppDirectoryEntry().appendingPathComponent(file)
-        
+        // ****************************************************
+        // * Get App's storage Partition Directory Last Entry *
+        // ****************************************************
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last  else {
+            fatalError("Could not get last Documents Directory Entry.")
+        }
+
+        // **************************************
+        // * Append File Entry To the Directory *
+        // **************************************
+        let appPartitionStorageEntryURL = documentsDirectory.appendingPathComponent(file)
+        print("Appended File to Directory OK.")
+
         // *****************************************
-        // * Write file to App's Storage Partition *
+        // * Write Data to App's Storage Partition *
         // *****************************************
         do {
-            try str.write(to: appPartitionStorageEntryURL, atomically: true, encoding: .utf8)
+            // *********************************************************
+            // * Determine if Data Already Exists for File (reachable) *
+            // *********************************************************
+            var dataExists = false
+            
+            if let _ = try? appPartitionStorageEntryURL.checkResourceIsReachable() {
+                dataExists = true
+                print("Data for File \(file) exists already.")
+            } else {
+                print("Data for File \(file) does not exist yet.")
+            }
+            
+            // *****************************************
+            // * If file has no data, write data to it *
+            // *****************************************
+            if !dataExists {
+                try fileInBundleData.write(to: appPartitionStorageEntryURL, atomically: true, encoding: .utf8)
+                print("For File \(file) in App's Storage Partition, data was written to.")
+            }
+            
+            // ***********************************************
+            // * Read File Data from App's Storage Partition *
+            // ***********************************************
+            let stringDataFromStoragePartition = try String(contentsOf: appPartitionStorageEntryURL)
+            print("Data from file found in App's Storage Partition Bytes: \(stringDataFromStoragePartition.count)")
+            print("Logic executed successfully.")
+            return appPartitionStorageEntryURL
+            
         } catch {
-           return false
+            fatalError(error.localizedDescription)
         }
-        
-        return true
-    }
-    
-    // ********************************************************
-    // * Return directory of files in app's Storage Partition *
-    // ********************************************************
-    func getAppDirectoryEntry() -> URL {
-        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return path[0] // return first directory entry
+ 
     }
     
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension Bundle {
     
@@ -18,16 +19,23 @@ extension Bundle {
         // *************************
         // * Locate File in Bundle *
         // *************************
-        guard let url = self.url(forResource: file, withExtension: nil) else {
-            fatalError("Failed to locate file \(file) in bundle.")
-        }
+//        guard let url = self.url(forResource: file, withExtension: nil) else {
+//            fatalError("Failed to locate file \(file) in bundle.")
+//        }
         
-        // *****************************
-        // * Load the File from Bundle *
-        // *****************************
-        guard let data = try? Data(contentsOf: url) else {
+        // ************************************************
+        // * Locate file from Storage Partition Directory *
+        // ************************************************
+        let fileURL = FileManager.writeFileFromBundleToFileManager(file)
+        
+        // **************************
+        // * Load the File from URL *
+        // **************************
+        guard let data = try? Data(contentsOf: fileURL) else {
             fatalError("Failed to load file \(file) from bundle.")
         }
+        
+        print("File \(file) taken from Storage Partition Directory.")
         
         // ***********************************************************
         // * Convert File JSON data to Instances of struct Astronaut *
