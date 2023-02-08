@@ -2,7 +2,8 @@
 // * This playground demonstrantes how a file in an app's bundle can  *
 // * be written to an app's persistant Storage Partition playground   *
 // ********************************************************************
-import UIKit // This is needed for FileManager Class and it's methods
+//import UIKit // This is needed for FileManager Class and it's methods
+import SwiftUI // OR: This is needed for FileManager Class and it's methods
 
 // ****************************************
 // * Create Instance of FileManager Class *

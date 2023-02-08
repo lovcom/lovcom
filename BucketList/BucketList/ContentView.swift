@@ -5,44 +5,73 @@
 //  Created by Dan Lovell on 8/9/22.
 //
 
+import MapKit
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        Text("Hello, World!")
-            .onTapGesture {
-                let str = "Test Message"
-                // create file message.txt
-                let url = getDocumentsDirectory().appendingPathComponent("message.txt")
-                
-                do {
-                    // Write data to file message.txt
-                    try str.write(to: url, atomically: true, encoding: .utf8)
-                    
-                    // read data from file message.txt
-                    let input = try String(contentsOf: url)
-                    print(input)
-                } catch {
-                    // Print caught error
-                    print(error.localizedDescription)
-                }
-                
-            }
-    }
+    @StateObject private var viewModel = ViewModel()
     
-    // Return directory of files in app's partition
-    func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
+    var body: some View {
+        ZStack {
+            Map(coordinateRegion: $viewModel.mapRegion, annotationItems: viewModel.locations) { location in
+                MapAnnotation(coordinate: location.coordinate) {
+                    VStack {
+                        Image(systemName: "star.circle")
+                            .resizable()
+                            .foregroundColor(.red)
+                            .frame(width: 44, height: 44) // Apple's minimum size guidance
+                            .background(.white)
+                            .clipShape(Circle())
+                        
+                        Text(location.name)
+                            .fixedSize() // without this modifier, long names will be cut off on the screen followed by ... future SwiftUI might fix this
+                    }
+                    .onTapGesture {
+                        viewModel.selectedPlace = location
+                    }
+                }
+            }
+            .ignoresSafeArea()
+            
+            Circle()
+                .fill(.blue)
+                .opacity(0.3)
+                .frame(width: 32, height: 32)
+            
+            VStack {
+                Spacer()
+                
+                HStack {
+                    Spacer()
+                    
+                    Button {
+                        viewModel.addLocation()
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                    .padding()
+                    .background(.black.opacity(0.75))
+                    .foregroundColor(.white)
+                    .font(.title)
+                    .clipShape(Circle())
+                    .padding(.trailing)
+                }
+            }
+        }
+        .sheet(item: $viewModel.selectedPlace) { place in
+            EditView(location: place) { newLocation in
+                viewModel.update(location: newLocation)
+            }
+            
+        }
     }
     
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
-    
-    
     
 }
