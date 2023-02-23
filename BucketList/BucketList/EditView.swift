@@ -14,7 +14,7 @@ struct EditView: View {
     
     @Environment(\.dismiss) var dismiss
     var location: Location
-    var onSave: (Location) -> Void
+    var onSave: (Location) -> Void // completion closure; gets called by caller in ContentView.swift
     
     @State private var name: String
     @State private var description: String

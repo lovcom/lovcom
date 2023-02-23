@@ -83,10 +83,11 @@ extension ContentView {
                         // * authentication in this func, @MainActor for this class was not respected when setting self.isUnlocked  *
                         // * to true.  The solution is to place that inside a Task enclosure as shown below.                        *
                         // **********************************************************************************************************
-                        
+                        print("about to set isUnlocked to true")
                         // self.isUnlocked = true
                         Task { @MainActor in
                             self.isUnlocked = true
+                            print("isUnlocked was set to true")
                         }
                     } else {
                         print("Failed to authenticate")
